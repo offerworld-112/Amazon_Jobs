@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobConnect — Discover Amazon Job Opportunities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    colors: {
+                        dark: { 50: '#1a1a2e', 100: '#16162a', 200: '#121226', 300: '#0d0d1a', 400: '#0a0a14', 500: '#07070e', 600: '#050509', 900: '#000000' },
+                        neon: { orange: '#ff6b2b', blue: '#3b82f6', cyan: '#06b6d4', red: '#ef4444' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #e2e8f0; overflow-x: hidden; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a14; }
+        ::-webkit-scrollbar-thumb { background: #ff6b2b44; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff6b2b88; }
+
+        /* Glow Effects */
+        .glow-orange { box-shadow: 0 0 15px rgba(255,107,43,0.3), 0 0 45px rgba(255,107,43,0.1); }
+        .glow-orange-strong { box-shadow: 0 0 20px rgba(255,107,43,0.5), 0 0 60px rgba(255,107,43,0.2), 0 0 100px rgba(255,107,43,0.1); }
+        .glow-blue { box-shadow: 0 0 15px rgba(59,130,246,0.3), 0 0 45px rgba(59,130,246,0.1); }
+        .glow-cyan { box-shadow: 0 0 15px rgba(6,182,212,0.3), 0 0 45px rgba(6,182,212,0.1); }
+        .glow-border-orange { border: 1px solid rgba(255,107,43,0.3); box-shadow: inset 0 0 20px rgba(255,107,43,0.05), 0 0 15px rgba(255,107,43,0.1); }
+        .glow-border-blue { border: 1px solid rgba(59,130,246,0.3); box-shadow: inset 0 0 20px rgba(59,130,246,0.05), 0 0 15px rgba(59,130,246,0.1); }
+        .text-glow-orange { text-shadow: 0 0 10px rgba(255,107,43,0.5), 0 0 30px rgba(255,107,43,0.2); }
+        .text-glow-blue { text-shadow: 0 0 10px rgba(59,130,246,0.5), 0 0 30px rgba(59,130,246,0.2); }
+        .text-glow-cyan { text-shadow: 0 0 10px rgba(6,182,212,0.5), 0 0 30px rgba(6,182,212,0.2); }
+
+        /* Glass Effect */
+        .glass { background: rgba(10,10,20,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        .glass-light { background: rgba(20,20,40,0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); }
+
+        /* Animations */
+        @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        @keyframes float-delayed { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 20px rgba(255,107,43,0.3), 0 0 60px rgba(255,107,43,0.1); } 50% { box-shadow: 0 0 30px rgba(255,107,43,0.5), 0 0 80px rgba(255,107,43,0.2); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes borderGlow { 0%, 100% { border-color: rgba(255,107,43,0.2); } 50% { border-color: rgba(255,107,43,0.5); } }
+        @keyframes commentPop { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes orb-move { 0% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -20px) scale(1.1); } 66% { transform: translate(-20px, 15px) scale(0.9); } 100% { transform: translate(0, 0) scale(1); } }
+
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+        .animate-gradient { background-size: 200% 200%; animation: gradient-shift 5s ease infinite; }
+        .animate-orb { animation: orb-move 12s ease-in-out infinite; }
+
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b2b, #ff8f5a);
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255,107,43,0.3), 0 0 60px rgba(255,107,43,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,107,43,0.5), 0 0 80px rgba(255,107,43,0.2), 0 0 120px rgba(255,107,43,0.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,107,43,0.4);
+            color: #ff6b2b;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,107,43,0.1);
+            border-color: #ff6b2b;
+            box-shadow: 0 0 20px rgba(255,107,43,0.2);
+            transform: scale(1.03);
+        }
+
+        /* Nav Link */
+        .nav-link { position: relative; transition: all 0.3s ease; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 50%; width: 0; height: 2px;
+            background: #ff6b2b;
+            box-shadow: 0 0 8px rgba(255,107,43,0.5);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover { color: #ff6b2b; text-shadow: 0 0 10px rgba(255,107,43,0.3); }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Card Hover */
+        .card-hover { transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .card-hover:hover { transform: translateY(-8px); }
+
+        /* Step Connector */
+        .step-line {
+            background: linear-gradient(90deg, rgba(255,107,43,0.1), rgba(255,107,43,0.4), rgba(6,182,212,0.4), rgba(6,182,212,0.1));
+            height: 2px;
+        }
+
+        /* Accordion */
+        .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease; }
+        .faq-content.open { max-height: 300px; }
+        .faq-chevron { transition: transform 0.3s ease; }
+        .faq-chevron.open { transform: rotate(180deg); }
+
+        /* Comment Bubble */
+        .comment-bubble { animation: commentPop 0.5s ease-out; }
+
+        /* Hero Background */
+        .hero-bg {
+            background: radial-gradient(ellipse at 20% 50%, rgba(255,107,43,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(6,182,212,0.05) 0%, transparent 50%),
+                        #000;
+        }
+
+        /* Form Input */
+        .form-input {
+            background: rgba(15,15,30,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255,107,43,0.5);
+            box-shadow: 0 0 15px rgba(255,107,43,0.15), inset 0 0 15px rgba(255,107,43,0.05);
+        }
+        .form-input::placeholder { color: #4a5568; }
+
+        /* Star Glow */
+        .star-glow { filter: drop-shadow(0 0 4px rgba(255,107,43,0.6)); }
+
+        /* Mobile Menu */
+        .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Selection */
+        ::selection { background: rgba(255,107,43,0.3); color: #fff; }
+    </style>
+</head>
+<body class="font-inter antialiased">
+
+    <!-- ===================== COUNTDOWN BAR ===================== -->
+    <div id="countdown-bar" class="fixed top-0 left-0 w-full z-[60] overflow-hidden" style="background: linear-gradient(90deg, rgba(239,68,68,0.15), rgba(255,107,43,0.15), rgba(239,68,68,0.15)); border-bottom: 1px solid rgba(255,107,43,0.2);">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-center gap-3 text-sm">
+            <span class="animate-pulse-glow text-base">⏳</span>
+            <span class="text-gray-300 hidden sm:inline">Limited Hiring Window – Apply within</span>
+            <span class="text-gray-300 sm:hidden">Hiring closes in</span>
+            <span id="countdown-timer" class="font-bold text-neon-orange text-glow-orange tracking-wider">48:00:00</span>
+            <span class="text-gray-400 hidden sm:inline">!</span>
+        </div>
+    </div>
+
+    <!-- ===================== HEADER ===================== -->
+    <header id="header" class="fixed top-[38px] left-0 w-full z-50 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="glass rounded-2xl mt-2 px-4 sm:px-6 py-3 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2.5 group">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #ff6b2b, #ff8f5a);">
+                        <i data-lucide="briefcase" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white group-hover:text-neon-orange transition-colors">Job<span class="text-neon-orange">Connect</span></span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="nav-link text-sm text-gray-300">Home</a>
+                    <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="nav-link text-sm text-gray-300">Jobs</a>
+                    <a href="#how-it-works" class="nav-link text-sm text-gray-300">How It Works</a>
+                    <a href="#reviews" class="nav-link text-sm text-gray-300">Reviews</a>
+                    <a href="#faq" class="nav-link text-sm text-gray-300">FAQ</a>
+                </nav>
+
+                <!-- CTA + Mobile Toggle -->
+                <div class="flex items-center gap-3">
+                    <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="btn-primary px-5 py-2.5 rounded-xl text-sm hidden sm:inline-flex items-center gap-2">
+                        Apply Now
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <button id="mobile-toggle" class="md:hidden w-10 h-10 rounded-xl glass flex items-center justify-center text-gray-300 hover:text-white transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 w-72 h-full z-[70] glass" style="background: rgba(5,5,15,0.95); backdrop-filter: blur(30px);">
+        <div class="p-6">
+            <button id="mobile-close" class="w-10 h-10 rounded-xl glass-light flex items-center justify-center text-gray-300 hover:text-white mb-8">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <nav class="flex flex-col gap-4">
+                <a href="#home" class="mobile-link text-lg text-gray-300 hover:text-neon-orange transition-colors py-2">Home</a>
+                <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="mobile-link text-lg text-gray-300 hover:text-neon-orange transition-colors py-2">Jobs</a>
+                <a href="#how-it-works" class="mobile-link text-lg text-gray-300 hover:text-neon-orange transition-colors py-2">How It Works</a>
+                <a href="#reviews" class="mobile-link text-lg text-gray-300 hover:text-neon-orange transition-colors py-2">Reviews</a>
+                <a href="#faq" class="mobile-link text-lg text-gray-300 hover:text-neon-orange transition-colors py-2">FAQ</a>
+                <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="btn-primary px-5 py-3 rounded-xl text-sm text-center mt-4 inline-flex items-center justify-center gap-2">
+                    Apply Now
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </nav>
+        </div>
+    </div>
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-[65] hidden"></div>
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <section id="home" class="hero-bg relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden">
+        <!-- Floating Orbs -->
+        <div class="absolute top-20 left-10 w-64 h-64 rounded-full animate-orb opacity-20" style="background: radial-gradient(circle, rgba(255,107,43,0.4), transparent 70%);"></div>
+        <div class="absolute bottom-20 right-10 w-80 h-80 rounded-full animate-orb opacity-15" style="background: radial-gradient(circle, rgba(59,130,246,0.3), transparent 70%); animation-delay: -4s;"></div>
+        <div class="absolute top-1/2 left-1/2 w-48 h-48 rounded-full animate-orb opacity-10" style="background: radial-gradient(circle, rgba(6,182,212,0.4), transparent 70%); animation-delay: -8s;"></div>
+
+        <!-- Floating Elements -->
+        <div class="absolute top-32 right-[15%] w-3 h-3 rounded-full bg-neon-orange animate-float opacity-60" style="box-shadow: 0 0 10px rgba(255,107,43,0.8);"></div>
+        <div class="absolute bottom-40 left-[20%] w-2 h-2 rounded-full bg-neon-cyan animate-float-delayed opacity-50" style="box-shadow: 0 0 8px rgba(6,182,212,0.8);"></div>
+        <div class="absolute top-[60%] right-[10%] w-2.5 h-2.5 rounded-full bg-neon-blue animate-float opacity-40" style="box-shadow: 0 0 8px rgba(59,130,246,0.8); animation-delay: -2s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Text -->
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light mb-6" style="animation: slideUp 0.6s ease-out;">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Now Hiring — Multiple Positions</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6" style="animation: slideUp 0.6s ease-out 0.1s both;">
+                        <span class="text-white">Start Your Career with </span>
+                        <span class="bg-clip-text text-transparent" style="background: linear-gradient(135deg, #ff6b2b, #ff8f5a, #06b6d4); -webkit-background-clip: text;">Amazon Jobs</span>
+                        <span class="text-white"> Today</span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed" style="animation: slideUp 0.6s ease-out 0.2s both;">
+                        Flexible roles. Fast hiring. Competitive pay. Find the right opportunity that fits your life.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mb-10" style="animation: slideUp 0.6s ease-out 0.3s both;">
+                        <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="btn-primary px-8 py-4 rounded-2xl text-base inline-flex items-center gap-2.5 w-full sm:w-auto justify-center animate-glow-pulse">
+                            Apply Now
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="btn-secondary px-8 py-4 rounded-2xl text-base inline-flex items-center gap-2.5 w-full sm:w-auto justify-center">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                            Browse Jobs
+                        </a>
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="flex flex-wrap items-center gap-6 justify-center lg:justify-start" style="animation: slideUp 0.6s ease-out 0.4s both;">
+                        <div class="flex items-center gap-2 text-sm text-gray-500">
+                            <i data-lucide="users" class="w-4 h-4 text-neon-orange"></i>
+                            <span>Thousands Hired Monthly</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-500">
+                            <i data-lucide="zap" class="w-4 h-4 text-neon-cyan"></i>
+                            <span>Quick Application</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-500">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-neon-blue"></i>
+                            <span>Trusted Platform</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Visual -->
+                <div class="relative" style="animation: fadeIn 1s ease-out 0.3s both;">
+                    <div class="relative rounded-3xl overflow-hidden glow-orange">
+                        <img src="image/download.png" alt="Modern warehouse workspace" class="w-full h-auto object-cover rounded-3xl" style="filter: brightness(0.7) saturate(1.2);">
+                        <!-- Overlay -->
+                        <div class="absolute inset-0 rounded-3xl" style="background: linear-gradient(135deg, rgba(255,107,43,0.15) 0%, transparent 50%, rgba(6,182,212,0.1) 100%);"></div>
+                        <div class="absolute inset-0 rounded-3xl" style="background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);"></div>
+                        <!-- Floating Info Card -->
+                        <div class="absolute bottom-6 left-6 right-6 glass rounded-2xl p-4 animate-float-delayed">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(255,107,43,0.2);">
+                                    <i data-lucide="trending-up" class="w-5 h-5 text-neon-orange"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-white">Hiring Surge Active</p>
+                                    <p class="text-xs text-gray-400">12,400+ open positions this week</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative glow behind image -->
+                    <div class="absolute -inset-4 -z-10 rounded-3xl opacity-30" style="background: radial-gradient(ellipse at center, rgba(255,107,43,0.2), transparent 70%);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== STATS SECTION ===================== -->
+    <section class="relative py-20 overflow-hidden" style="background: linear-gradient(180deg, #000 0%, #0a0a14 50%, #000 100%);">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Stat 1 -->
+                <div class="reveal glass-light rounded-2xl p-8 text-center card-hover glow-border-orange">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-white mb-2">
+                        <span class="counter" data-target="85000">0</span>+
+                    </div>
+                    <p class="text-gray-400 text-sm">Monthly Applicants</p>
+                </div>
+                <!-- Stat 2 -->
+                <div class="reveal reveal-delay-1 glass-light rounded-2xl p-8 text-center card-hover glow-border-blue">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-white mb-2">
+                        <span class="counter" data-target="10000">0</span>+
+                    </div>
+                    <p class="text-gray-400 text-sm">Jobs Filled</p>
+                </div>
+                <!-- Stat 3 -->
+                <div class="reveal reveal-delay-2 glass-light rounded-2xl p-8 text-center card-hover glow-border-orange">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-white mb-2 flex items-center justify-center gap-2">
+                        <span class="counter" data-target="4.8" data-decimal="true">0</span>
+                        <span class="text-neon-orange star-glow text-3xl">★</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Platform Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== JOB BENEFITS ===================== -->
+    <section id="jobs" class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at 30% 0%, rgba(255,107,43,0.04) 0%, transparent 60%);"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block text-xs font-semibold uppercase tracking-widest text-neon-orange mb-4">Why Choose Us</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">Benefits That Matter</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Discover why thousands of job seekers trust our platform to connect them with the right opportunities.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Benefit 1 -->
+                <div class="reveal glass-light rounded-2xl p-6 card-hover group" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110" style="background: rgba(255,107,43,0.1); box-shadow: 0 0 20px rgba(255,107,43,0.1);">
+                        <i data-lucide="clock" class="w-7 h-7 text-neon-orange"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Flexible Hours</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Choose shifts that work around your schedule — day, night, or weekend options available.</p>
+                </div>
+                <!-- Benefit 2 -->
+                <div class="reveal reveal-delay-1 glass-light rounded-2xl p-6 card-hover group" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110" style="background: rgba(59,130,246,0.1); box-shadow: 0 0 20px rgba(59,130,246,0.1);">
+                        <i data-lucide="wallet" class="w-7 h-7 text-neon-blue"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Weekly Pay</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Get paid every week with competitive hourly rates and potential overtime bonuses.</p>
+                </div>
+                <!-- Benefit 3 -->
+                <div class="reveal reveal-delay-2 glass-light rounded-2xl p-6 card-hover group" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110" style="background: rgba(6,182,212,0.1); box-shadow: 0 0 20px rgba(6,182,212,0.1);">
+                        <i data-lucide="graduation-cap" class="w-7 h-7 text-neon-cyan"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Entry-Level Friendly</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">No experience required for many roles — full training provided from day one.</p>
+                </div>
+                <!-- Benefit 4 -->
+                <div class="reveal reveal-delay-3 glass-light rounded-2xl p-6 card-hover group" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110" style="background: rgba(255,107,43,0.1); box-shadow: 0 0 20px rgba(255,107,43,0.1);">
+                        <i data-lucide="rocket" class="w-7 h-7 text-neon-orange"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Fast Hiring</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Streamlined process — most applicants get matched and approved within 48 hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section id="how-it-works" class="relative py-24" style="background: linear-gradient(180deg, #000 0%, #0a0a14 50%, #000 100%);">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block text-xs font-semibold uppercase tracking-widest text-neon-cyan mb-4">Simple Process</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">How It Works</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Four simple steps to get started on your new career path.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                <!-- Connector Lines (desktop only) -->
+                <div class="hidden md:block absolute top-[52px] left-[18%] right-[18%] step-line z-0"></div>
+
+                <!-- Step 1 -->
+                <div class="reveal text-center relative z-10">
+                    <div class="w-[100px] h-[100px] mx-auto rounded-2xl glass-light flex items-center justify-center mb-6 animate-glow-pulse" style="border: 1px solid rgba(255,107,43,0.2); animation-duration: 4s;">
+                        <i data-lucide="file-text" class="w-10 h-10 text-neon-orange"></i>
+                    </div>
+                    <div class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold mb-3" style="background: rgba(255,107,43,0.2); color: #ff6b2b;">1</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Apply Online</h3>
+                    <p class="text-gray-400 text-sm">Fill out our quick application form — takes less than 2 minutes.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="reveal reveal-delay-1 text-center relative z-10">
+                    <div class="w-[100px] h-[100px] mx-auto rounded-2xl glass-light flex items-center justify-center mb-6" style="border: 1px solid rgba(59,130,246,0.2); box-shadow: 0 0 20px rgba(59,130,246,0.1);">
+                        <i data-lucide="search" class="w-10 h-10 text-neon-blue"></i>
+                    </div>
+                    <div class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold mb-3" style="background: rgba(59,130,246,0.2); color: #3b82f6;">2</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Get Matched</h3>
+                    <p class="text-gray-400 text-sm">Our system matches you with roles that fit your preferences.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="reveal reveal-delay-2 text-center relative z-10">
+                    <div class="w-[100px] h-[100px] mx-auto rounded-2xl glass-light flex items-center justify-center mb-6" style="border: 1px solid rgba(6,182,212,0.2); box-shadow: 0 0 20px rgba(6,182,212,0.1);">
+                        <i data-lucide="mail" class="w-10 h-10 text-neon-cyan"></i>
+                    </div>
+                    <div class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold mb-3" style="background: rgba(6,182,212,0.2); color: #06b6d4;">3</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Receive Details</h3>
+                    <p class="text-gray-400 text-sm">Get all the info you need — pay, location, schedule, and next steps.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="reveal reveal-delay-3 text-center relative z-10">
+                    <div class="w-[100px] h-[100px] mx-auto rounded-2xl glass-light flex items-center justify-center mb-6" style="border: 1px solid rgba(255,107,43,0.2); box-shadow: 0 0 20px rgba(255,107,43,0.1);">
+                        <i data-lucide="badge-check" class="w-10 h-10 text-neon-orange"></i>
+                    </div>
+                    <div class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold mb-3" style="background: rgba(255,107,43,0.2); color: #ff6b2b;">4</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Start Working</h3>
+                    <p class="text-gray-400 text-sm">Complete onboarding and begin your new role — it's that simple.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== REVIEWS SECTION ===================== -->
+    <section id="reviews" class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at 70% 50%, rgba(59,130,246,0.04) 0%, transparent 60%);"></div>
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block text-xs font-semibold uppercase tracking-widest text-neon-orange mb-4">Testimonials</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">What People Are Saying</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Real feedback from people who found opportunities through our platform.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Review 1 -->
+                <div class="reveal glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"I was skeptical at first, but the process was incredibly smooth. Within 3 days, I had a warehouse position lined up. The weekly pay is exactly what I needed."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #ff6b2b, #ff8f5a); color: white;">MJ</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Marcus J.</p>
+                            <p class="text-xs text-gray-500">Warehouse Associate</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 2 -->
+                <div class="reveal reveal-delay-1 glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"As a single mom, flexible hours were non-negotiable. This platform matched me with a delivery role that fits perfectly around my kids' schedule. Truly grateful."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white;">SR</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Sarah R.</p>
+                            <p class="text-xs text-gray-500">Delivery Driver</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="reveal reveal-delay-2 glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"No prior experience and I still got hired within a week. The training was thorough and the team environment is great. Best decision I made this year."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #06b6d4, #22d3ee); color: white;">DK</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">David K.</p>
+                            <p class="text-xs text-gray-500">Fulfillment Center</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 4 -->
+                <div class="reveal glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"Applied on Monday, had an orientation by Wednesday. The speed of the process is unreal. Pay is solid and the benefits kicked in faster than expected."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #ff6b2b, #06b6d4); color: white;">LP</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Lisa P.</p>
+                            <p class="text-xs text-gray-500">Sortation Associate</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 5 -->
+                <div class="reveal reveal-delay-1 glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"I've tried other job platforms and they were all slow and confusing. This one was different — clean, fast, and actually delivered on its promise. Highly recommend."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #3b82f6, #ff6b2b); color: white;">TN</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Tyler N.</p>
+                            <p class="text-xs text-gray-500">Package Handler</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 6 -->
+                <div class="reveal reveal-delay-2 glass-light rounded-2xl p-6 card-hover" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-neon-orange text-neon-orange star-glow"></i>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-6">"Needed a part-time gig while finishing school. Got matched with a flexible schedule that works perfectly. The platform made everything effortless."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold" style="background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white;">AW</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Aisha W.</p>
+                            <p class="text-xs text-gray-500">Part-Time Associate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== COMMENT BOX SECTION ===================== -->
+    <section class="relative py-24" style="background: linear-gradient(180deg, #000 0%, #0a0a14 50%, #000 100%);">
+        <div class="max-w-3xl mx-auto px-4">
+            <div class="text-center mb-12 reveal">
+                <span class="inline-block text-xs font-semibold uppercase tracking-widest text-neon-blue mb-4">Community</span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-4">Join the Conversation</h2>
+                <p class="text-gray-400 text-lg">Share your thoughts or read what others are saying.</p>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="reveal glass-light rounded-2xl p-6 mb-6" style="border: 1px solid rgba(255,255,255,0.05);">
+                <div class="flex gap-3 mb-4">
+                    <input type="text" id="comment-name" placeholder="Your name" class="form-input rounded-xl px-4 py-3 text-sm flex-1">
+                    <input type="text" id="comment-text" placeholder="Write a comment..." class="form-input rounded-xl px-4 py-3 text-sm flex-[2]">
+                </div>
+                <div class="flex justify-end">
+                    <button id="comment-submit" class="btn-primary px-6 py-2.5 rounded-xl text-sm inline-flex items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        Post Comment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Comments List -->
+            <div id="comments-list" class="space-y-4">
+                <!-- Pre-existing comments -->
+                <div class="comment-bubble glass-light rounded-2xl p-5" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: rgba(255,107,43,0.2); color: #ff6b2b;">RM</div>
+                        <span class="text-sm font-semibold text-white">Rachel M.</span>
+                        <span class="text-xs text-gray-500">2 hours ago</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">Just submitted my application! The form was super easy. Hoping to hear back soon. 🤞</p>
+                </div>
+                <div class="comment-bubble glass-light rounded-2xl p-5" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: rgba(59,130,246,0.2); color: #3b82f6;">JT</div>
+                        <span class="text-sm font-semibold text-white">James T.</span>
+                        <span class="text-xs text-gray-500">5 hours ago</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">Got hired through this platform last month. Started at the fulfillment center and already got a raise. Legit platform! 💪</p>
+                </div>
+                <div class="comment-bubble glass-light rounded-2xl p-5" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: rgba(6,182,212,0.2); color: #06b6d4;">KN</div>
+                        <span class="text-sm font-semibold text-white">Karen N.</span>
+                        <span class="text-xs text-gray-500">1 day ago</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">Does anyone know if they have part-time evening shifts? I work during the day but need extra income.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FAQ SECTION ===================== -->
+    <section id="faq" class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at 50% 50%, rgba(255,107,43,0.03) 0%, transparent 60%);"></div>
+        <div class="max-w-3xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block text-xs font-semibold uppercase tracking-widest text-neon-cyan mb-4">Got Questions?</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">Frequently Asked Questions</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">Everything you need to know before applying.</p>
+            </div>
+
+            <div class="space-y-3">
+                <!-- FAQ 1 -->
+                <div class="reveal faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300 hover:border-opacity-50" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">Is this platform affiliated with Amazon directly?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">No, JobConnect is an independent job discovery platform. We help connect job seekers with opportunities from various companies, including logistics and fulfillment roles. We are not officially affiliated with, endorsed by, or connected to Amazon or any other specific employer.</p>
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="reveal reveal-delay-1 faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">How much do these jobs typically pay?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">Pay varies by role, location, and experience level. Most entry-level warehouse and fulfillment positions start between $17–$22 per hour, with opportunities for overtime pay and shift differentials. Specific compensation details are provided during the matching process.</p>
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="reveal reveal-delay-2 faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">Do I need previous experience to apply?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">No prior experience is needed for most entry-level positions. Comprehensive training is provided for all new hires. Some specialized roles may require specific skills or certifications, which will be clearly indicated in the job details.</p>
+                    </div>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="reveal reveal-delay-3 faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">How long does the hiring process take?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">The process is designed to be fast. After submitting your application, most candidates receive matching results within 24–48 hours. The entire process from application to start date typically takes 3–7 days, depending on the position and location.</p>
+                    </div>
+                </div>
+                <!-- FAQ 5 -->
+                <div class="reveal reveal-delay-4 faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">Is there a fee to use this platform?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">No, JobConnect is completely free for job seekers. We never charge applicants for access to job listings or placement services. If anyone asks you to pay for a job opportunity, it is not associated with our platform.</p>
+                    </div>
+                </div>
+                <!-- FAQ 6 -->
+                <div class="reveal faq-item glass-light rounded-2xl overflow-hidden transition-all duration-300" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
+                        <span class="text-sm font-semibold text-white pr-4">What types of jobs are available?</span>
+                        <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                    </button>
+                    <div class="faq-content px-6">
+                        <p class="text-gray-400 text-sm leading-relaxed pb-5">We list a variety of logistics and fulfillment roles including warehouse associates, package handlers, delivery drivers, sortation associates, and more. Both full-time and part-time positions are available across multiple locations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== APPLICATION FORM SECTION ===================== -->
+    <section id="apply" class="relative py-24 overflow-hidden" style="background: linear-gradient(180deg, #000 0%, #050510 50%, #000 100%);">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 animate-gradient" style="background: radial-gradient(ellipse at 30% 30%, rgba(255,107,43,0.06) 0%, transparent 50%), radial-gradient(ellipse at 70% 70%, rgba(59,130,246,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.03) 0%, transparent 50%); background-size: 200% 200%;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10" style="background: radial-gradient(circle, rgba(255,107,43,0.3), transparent 70%);"></div>
+
+        <div class="max-w-2xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light mb-6" style="border: 1px solid rgba(255,107,43,0.2);">
+                    <span class="w-2 h-2 rounded-full bg-neon-orange animate-pulse"></span>
+                    <span class="text-xs font-medium text-neon-orange uppercase tracking-wider">Limited Openings</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">Apply Now</h2>
+                <p class="text-gray-400 text-lg">Complete the form below and get matched with available positions in your area.</p>
+            </div>
+
+            <div class="reveal glass rounded-3xl p-8 sm:p-10" style="border: 1px solid rgba(255,107,43,0.15); box-shadow: 0 0 40px rgba(255,107,43,0.05), inset 0 0 40px rgba(255,107,43,0.02); animation: borderGlow 4s ease-in-out infinite;">
+                <form id="application-form" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
+                        <input type="text" required placeholder="Enter your full name" class="form-input w-full rounded-xl px-4 py-3.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                        <input type="email" required placeholder="you@example.com" class="form-input w-full rounded-xl px-4 py-3.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Phone Number</label>
+                        <input type="tel" required placeholder="(555) 000-0000" class="form-input w-full rounded-xl px-4 py-3.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Location</label>
+                        <input type="text" required placeholder="City, State" class="form-input w-full rounded-xl px-4 py-3.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Job Preference</label>
+                        <select required class="form-input w-full rounded-xl px-4 py-3.5 text-sm appearance-none cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 16px center;">
+                            <option value="" disabled selected>Select a position</option>
+                            <option>Warehouse Associate</option>
+                            <option>Delivery Driver</option>
+                            <option>Package Handler</option>
+                            <option>Sortation Associate</option>
+                            <option>Fulfillment Center</option>
+                            <option>Customer Service</option>
+                            <option>No Preference</option>
+                        </select>
+                    </div>
+                    <div class="pt-3">
+                        <button type="submit" class="btn-primary w-full py-4 rounded-2xl text-base font-semibold inline-flex items-center justify-center gap-2.5 animate-glow-pulse">
+                            Submit Application
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-3">By submitting, you agree to our Terms of Service and Privacy Policy. We respect your data — no spam, ever.</p>
+                </form>
+
+                <!-- Success Message (hidden by default) -->
+                <div id="form-success" class="hidden text-center py-12">
+                    <div class="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style="background: rgba(34,197,94,0.1); box-shadow: 0 0 30px rgba(34,197,94,0.2);">
+                        <i data-lucide="check-circle" class="w-10 h-10 text-green-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Application Submitted!</h3>
+                    <p class="text-gray-400 max-w-md mx-auto">Your information has been received. Our team will review your application and contact you within 24–48 hours with matching opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="relative py-16" style="background: #050509; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <a href="#" class="flex items-center gap-2.5 mb-4">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #ff6b2b, #ff8f5a);">
+                            <i data-lucide="briefcase" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <span class="text-lg font-bold text-white">Job<span class="text-neon-orange">Connect</span></span>
+                    </a>
+                    <p class="text-gray-500 text-sm leading-relaxed max-w-sm mb-6">An independent job discovery platform connecting seekers with logistics and fulfillment opportunities. Not affiliated with any specific employer.</p>
+                    <div class="flex items-center gap-3">
+                        <a href="#" class="w-10 h-10 rounded-xl glass-light flex items-center justify-center text-gray-400 hover:text-neon-orange hover:shadow-lg transition-all duration-300" style="box-shadow: none;" onmouseenter="this.style.boxShadow='0 0 15px rgba(255,107,43,0.2)'" onmouseleave="this.style.boxShadow='none'">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl glass-light flex items-center justify-center text-gray-400 hover:text-neon-blue hover:shadow-lg transition-all duration-300" style="box-shadow: none;" onmouseenter="this.style.boxShadow='0 0 15px rgba(59,130,246,0.2)'" onmouseleave="this.style.boxShadow='none'">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl glass-light flex items-center justify-center text-gray-400 hover:text-neon-cyan hover:shadow-lg transition-all duration-300" style="box-shadow: none;" onmouseenter="this.style.boxShadow='0 0 15px rgba(6,182,212,0.2)'" onmouseleave="this.style.boxShadow='none'">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl glass-light flex items-center justify-center text-gray-400 hover:text-neon-orange hover:shadow-lg transition-all duration-300" style="box-shadow: none;" onmouseenter="this.style.boxShadow='0 0 15px rgba(255,107,43,0.2)'" onmouseleave="this.style.boxShadow='none'">
+                            <i data-lucide="linkedin" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-sm font-semibold text-white mb-4">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Home</a></li>
+                        <li><a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Browse Jobs</a></li>
+                        <li><a href="#how-it-works" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">How It Works</a></li>
+                        <li><a href="https://www.af9m8trk.com/S1C11N8N/PL6125DB/?s1=Tafsir" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Apply Now</a></li>
+                    </ul>
+                </div>
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-sm font-semibold text-white mb-4">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-sm text-gray-500 hover:text-neon-orange transition-colors">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Bottom Bar -->
+            <div class="pt-8" style="border-top: 1px solid rgba(255,255,255,0.05);">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p class="text-xs text-gray-600">© 2025 JobConnect. All rights reserved. This is an independent platform and is not affiliated with Amazon.com, Inc.</p>
+                    <p class="text-xs text-gray-600">Made with <span class="text-neon-orange">♥</span> for job seekers</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================== JAVASCRIPT ===================== -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // ===== COUNTDOWN TIMER =====
+        function startCountdown() {
+            let stored = localStorage.getItem('jc_countdown_end');
+            let endTime;
+            
+            if (stored && parseInt(stored) > Date.now()) {
+                endTime = parseInt(stored);
+            } else {
+                endTime = Date.now() + (48 * 60 * 60 * 1000);
+                localStorage.setItem('jc_countdown_end', endTime.toString());
+            }
+
+            function update() {
+                const remaining = endTime - Date.now();
+                if (remaining <= 0) {
+                    document.getElementById('countdown-timer').textContent = '00:00:00';
+                    return;
+                }
+                const h = Math.floor(remaining / (1000 * 60 * 60));
+                const m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((remaining % (1000 * 60)) / 1000);
+                document.getElementById('countdown-timer').textContent =
+                    String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            }
+            update();
+            setInterval(update, 1000);
+        }
+        startCountdown();
+
+        // ===== MOBILE MENU =====
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileClose = document.getElementById('mobile-close');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMobile() {
+            mobileMenu.classList.add('open');
+            mobileOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobile() {
+            mobileMenu.classList.remove('open');
+            mobileOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+        mobileToggle.addEventListener('click', openMobile);
+        mobileClose.addEventListener('click', closeMobile);
+        mobileOverlay.addEventListener('click', closeMobile);
+        mobileLinks.forEach(l => l.addEventListener('click', closeMobile));
+
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ===== COUNTER ANIMATION =====
+        const counters = document.querySelectorAll('.counter');
+        let countersAnimated = false;
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countersAnimated) {
+                    countersAnimated = true;
+                    counters.forEach(counter => {
+                        const target = parseFloat(counter.dataset.target);
+                        const isDecimal = counter.dataset.decimal === 'true';
+                        const duration = 2000;
+                        const startTime = performance.now();
+
+                        function updateCounter(currentTime) {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            const current = eased * target;
+
+                            if (isDecimal) {
+                                counter.textContent = current.toFixed(1);
+                            } else {
+                                counter.textContent = Math.floor(current).toLocaleString();
+                            }
+
+                            if (progress < 1) {
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                if (isDecimal) {
+                                    counter.textContent = target.toFixed(1);
+                                } else {
+                                    counter.textContent = target.toLocaleString();
+                                }
+                            }
+                        }
+                        requestAnimationFrame(updateCounter);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        if (counters.length > 0) {
+            counterObserver.observe(counters[0].closest('section'));
+        }
+
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                const chevron = toggle.querySelector('.faq-chevron');
+                const isOpen = content.classList.contains('open');
+
+                // Close all others
+                document.querySelectorAll('.faq-content').forEach(c => c.classList.remove('open'));
+                document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.style.borderColor = 'rgba(255,255,255,0.05)';
+                });
+
+                if (!isOpen) {
+                    content.classList.add('open');
+                    chevron.classList.add('open');
+                    toggle.closest('.faq-item').style.borderColor = 'rgba(255,107,43,0.25)';
+                }
+            });
+        });
+
+        // ===== COMMENT SYSTEM =====
+        const commentName = document.getElementById('comment-name');
+        const commentText = document.getElementById('comment-text');
+        const commentSubmit = document.getElementById('comment-submit');
+        const commentsList = document.getElementById('comments-list');
+
+        const colors = [
+            { bg: 'rgba(255,107,43,0.2)', color: '#ff6b2b' },
+            { bg: 'rgba(59,130,246,0.2)', color: '#3b82f6' },
+            { bg: 'rgba(6,182,212,0.2)', color: '#06b6d4' },
+            { bg: 'rgba(168,85,247,0.2)', color: '#a855f7' },
+            { bg: 'rgba(34,197,94,0.2)', color: '#22c55e' },
+        ];
+
+        commentSubmit.addEventListener('click', () => {
+            const name = commentName.value.trim();
+            const text = commentText.value.trim();
+            if (!name || !text) return;
+
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const c = colors[Math.floor(Math.random() * colors.length)];
+
+            const bubble = document.createElement('div');
+            bubble.className = 'comment-bubble glass-light rounded-2xl p-5';
+            bubble.style.border = '1px solid rgba(255,255,255,0.05)';
+            bubble.innerHTML = `
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style="background: ${c.bg}; color: ${c.color};">${initials}</div>
+                    <span class="text-sm font-semibold text-white">${name}</span>
+                    <span class="text-xs text-gray-500">Just now</span>
+                </div>
+                <p class="text-gray-300 text-sm">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+            `;
+
+            commentsList.insertBefore(bubble, commentsList.firstChild);
+            commentName.value = '';
+            commentText.value = '';
+        });
+
+        // Allow Enter key to submit comment
+        commentText.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') commentSubmit.click();
+        });
+
+        // ===== APPLICATION FORM =====
+        const appForm = document.getElementById('application-form');
+        const formSuccess = document.getElementById('form-success');
+
+        appForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            appForm.style.display = 'none';
+            formSuccess.classList.remove('hidden');
+            formSuccess.style.animation = 'slideUp 0.6s ease-out';
+        });
+
+        // ===== HEADER SCROLL EFFECT =====
+        const header = document.getElementById('header');
+        const countdownBar = document.getElementById('countdown-bar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            
+            if (currentScroll > 100) {
+                countdownBar.style.transform = 'translateY(-100%)';
+                countdownBar.style.transition = 'transform 0.3s ease';
+                header.style.top = '0px';
+            } else {
+                countdownBar.style.transform = 'translateY(0)';
+                header.style.top = '38px';
+            }
+            
+            lastScroll = currentScroll;
+        }, { passive: true });
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
